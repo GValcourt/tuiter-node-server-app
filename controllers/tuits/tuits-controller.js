@@ -25,8 +25,9 @@ const updateTuit = (req, res) => {
 
 const deleteTuit = (req, res) => {
     const tuitdIdToDelete = parseInt(req.params.tid);
-    console.log(typeof tuitdIdToDelete) //Required to debug why the tuit wasn't deleting;
+    //console.log(typeof tuitdIdToDelete) //Required to debug why the tuit wasn't deleting;
     //it was getting the tid as a string but the JSON stored _id as an int
+    console.log(tuitdIdToDelete) //why is not deleting like it should; is the id wrong?
     tuits = tuits.filter((t) =>
       t._id !== tuitdIdToDelete);
     console.log(tuits)
