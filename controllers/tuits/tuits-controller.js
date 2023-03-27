@@ -1,41 +1,33 @@
-import posts from "./tuits.js";
-let tuits = posts;
+import * as tuitsDao from './tuits-dao.js'
 
-const createTuit = (req, res) => {
-    const _id = parseInt((new Date()).getTime()+'');
-    const newTuit = {_id, ...req.body}
+const createTuit = async (req, res) => {
+    const newTuit = req.body
     newTuit.likes = 0;
     newTuit.liked = false;
-    newTuit.dislikes = 0;
-    newTuit.disliked = false;
-    tuits.push(newTuit);
-    //console.log(tuits);
-    res.json(newTuit);
-    //console.log(newTuit);
+    //newTuit.dislikes = 0;
+    //newTuit.disliked = false;
+    const insertedTuit = await tuitsDao
+                             .createTuit(newTuit);
+    res.json(insertedTuit);
 }
 
-const findTuits = (req, res) =>
-   res.json(tuits);
+const findTuits = async (req, res) =>{
+  const tuits = await tuitsDao.findTuits()
+  res.json(tuits);
+}
 
-const updateTuit = (req, res) => {
-    const tuitdIdToUpdate = parseInt(req.params.tid);
+const updateTuit = async (req, res) => {
+    const tuitdIdToUpdate = req.params.tid;
     const updates = req.body;
-    const tuitIndex = tuits.findIndex(
-      (t) => t._id === tuitdIdToUpdate)
-    tuits[tuitIndex] = 
-      {...tuits[tuitIndex], ...updates};
-    res.sendStatus(200);
+    const status = await tuitsDao.updateTuit(tuitdIdToUpdate,
+                  updates);
+    res.json(status);
 }
 
-const deleteTuit = (req, res) => {
-    const tuitdIdToDelete = parseInt(req.params.tid);
-    //console.log(typeof tuitdIdToDelete) //Required to debug why the tuit wasn't deleting;
-    //it was getting the tid as a string but the JSON stored _id as an int
-    //console.log(tuitdIdToDelete); //why is not deleting like it should; is the id wrong?
-    tuits = tuits.filter((t) => t._id !== tuitdIdToDelete);
-    //console.log(tuits.filter((t) => t._id === tuitdIdToDelete)); //perhaps looking at the inverse will shed some light
-    //okay, so it only deletes tuits that are stored in the tuits "database" (ie the JSON)
-    res.sendStatus(200);
+const deleteTuit = async (req, res) => {
+    const tuitdIdToDelete = req.params.tid;
+    const status = await tuitsDao.deleteTuit(tuitdIdToDelete);
+  res.json(status);
 }
 
 
