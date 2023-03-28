@@ -8,6 +8,9 @@ const createTuit = (req, res) => {
     newTuit.liked = false;
     newTuit.dislikes = 0;
     newTuit.disliked = false;
+    newTuit.replies = 0;
+    newTuit.retuits = 0;
+    newTuit.disliked = false;
     tuits.push(newTuit);
     //console.log(tuits);
     res.json(newTuit);
